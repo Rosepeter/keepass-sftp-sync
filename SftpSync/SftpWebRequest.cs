@@ -7,7 +7,6 @@ using KeePassLib.Serialization;
 using System.Diagnostics;
 using System.Collections.Generic;
 using Renci.SshNet.Common;
-using Renci.SshNet.Pageant;
 using System.Text;
 
 namespace SftpSync
@@ -171,14 +170,6 @@ namespace SftpSync
 
                     n_con_info = new PrivateKeyConnectionInfo(m_uri.Host, l_port, strUser, v_keyauth);
                 }
-            }
-            else if (String.IsNullOrWhiteSpace(m_props.Get("SSHKey")) && 
-                        String.IsNullOrWhiteSpace(strPassword))
-            {
-                // No password, no keyfile, try pageant
-                PageantProtocol agent = new PageantProtocol();
-                n_con_info = new AgentConnectionInfo(m_uri.Host, l_port, strUser, agent);
-
             }
             else
             {
