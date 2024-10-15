@@ -1,13 +1,22 @@
 
 ARCHIVED 05/20/2024:
 ====================
-As of the above date, I'm archiving this repo.  I no longer use this plugin myself, and as such do not have an easy way to test or maintain it.
-Furthermore, the upstream project that this relies on SSH.NET does not seem to be interested in supporting non-Windows platforms, meanwhile the list of features and bugfixes continues
-and I have no way to keep a unified codebase for all OS's.  I've attempted to patch upstream library to support the features I need that aren't compatible, but have no succeeded.  
-Another issue is that at one point we supplied Putty support, but had to drop that because upstream patches were rejected.  In all this is becoming too painful for me to maintain
-and I lack the time or interest to continue.  KeepassXC now supports KDBX v4 databases and has a built-in SSH agent.  I recommned people who want this functionality checkout that option.
-If someone wants to take this project over, I'm open to the idea of transfering this repo, but I'm leery of someone of unknown reput hijacking it.  Feel free to open an issue to discuss.
+As of the above date, I'm archiving this repo.  I no longer use this plugin
+myself, and as such do not have an easy way to test or maintain it.
+Furthermore, the upstream project that this relies on SSH.NET does not seem to
+be interested in supporting non-Windows platforms, meanwhile the list of
+features and bugfixes continues and I have no way to keep a unified codebase for
+all OS's.  I've attempted to patch upstream library to support the features I
+need that aren't compatible, but have no succeeded.
 
+Another issue is that at one point we supplied Putty support, but had to drop
+that because upstream patches were rejected.  In all this is becoming too
+painful for me to maintain and I lack the time or interest to continue.
+KeepassXC now supports KDBX v4 databases and has a built-in SSH agent.  I
+recommned people who want this functionality checkout that option.  If someone
+wants to take this project over, I'm open to the idea of transfering this repo,
+but I'm leery of someone of unknown reput hijacking it.  Feel free to open an
+issue to discuss.
 
 
 Keepass SftpSync
@@ -24,9 +33,28 @@ I hope to continue development of this addon, as the original developer has not 
 
 Connecting to your database through sftp can be set up with `Open URL...` menu option
 
+Building
+=======
+
+As this plugin heavily relies on Renci.SshNet and the plgx-format is not
+suitable for such plugins, this plugin is now built as dll. For building the
+plugin only the SftpSync/SftpSync.csproj is relevant, the plugin can be build
+like this using `msbuild`:
+
+```
+msbuild -restore SftpSync.csproj -p:Configuration=Release -p:UseLocalKeePass=true
+```
+
+This creates a release-dll that is built against a local copy of keepass. You
+can either choose to built against a local copy of keepass
+(`-p:UseLocalKeePass=true`) or one that is retrieved from Nuget
+(`-p:UseLocalKeePass=false`). The default path of the local keepass-copy is
+`/usr/lib/keepass/KeePass.exe`, a different path could be specified by passing
+`-p:KeePassPath=<your_path>`.
+
 Change Log
 --------------
-09.09.2024  2.4.x: Remove pageant support
+09.09.2024  2.4.x: Remove pageant support, refactor csproj-build
 
 26.10.2020  2.4.1: Minor Update to fix previous version bump mistake (This should stop you from getting alerts to update.)
 

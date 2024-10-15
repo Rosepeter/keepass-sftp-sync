@@ -1,83 +1,62 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+
   <PropertyGroup>
-    <ProjectGuid>{FD5007CB-C068-4557-A162-87381E6F62AB}</ProjectGuid>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>SftpSync</RootNamespace>
     <AssemblyName>SftpSync</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <NoWin32Manifest>False</NoWin32Manifest>
-    <SignAssembly>False</SignAssembly>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>False</RunCodeAnalysis>
-    <SourceAnalysisOverrideSettingsFile>C:\Users\Vitaly\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <DelaySign>False</DelaySign>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <BaseAddress>4194304</BaseAddress>
-    <RegisterForComInterop>False</RegisterForComInterop>
-    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-    <FileAlignment>4096</FileAlignment>
-  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>bin\Debug\</OutputPath>
     <DebugSymbols>True</DebugSymbols>
-    <DebugType>Full</DebugType>
-    <Optimize>True</Optimize>
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-    <StartAction>Program</StartAction>
-    <StartProgram>bin\Debug\KeePass.exe</StartProgram>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\</OutputPath>
-    <DebugSymbols>False</DebugSymbols>
-    <DebugType>None</DebugType>
     <Optimize>True</Optimize>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LangVersion>4</LangVersion>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bins\KeePass\</OutputPath>
+
+  <PropertyGroup>
+    <UseLocalKeePass Condition="'$(UseLocalKeePass)' == ''">false</UseLocalKeePass>
+    <KeePassPath>/usr/lib/keepass/KeePass.exe</KeePassPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LangVersion>4</LangVersion>
-  </PropertyGroup>
-  <ItemGroup>
+
+  <ItemGroup Condition="'$(UseLocalKeePass)' == 'true'">
     <Reference Include="KeePass">
-      <HintPath>..\bins\KeePass.exe</HintPath>
+      <HintPath>$(KeePassPath)</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="Renci.SshNet, Version=2016.0.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Renci.SshNet.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseLocalKeePass)' == 'false'">
+    <PackageReference Include="KeePass" Version="2.57.0.28775" />
+  </ItemGroup>
+
+  <!-- More external references -->
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
-    <Reference Include="System.Core">
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="SSH.NET" Version="2024.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+    <!-- Use ILRepack and the corresponding build-task to create a self-contained dll -->
+    <PackageReference Include="ILRepack" Version="2.0.34">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.34.1" />
   </ItemGroup>
+
+  <!-- Source files -->
   <ItemGroup>
     <Compile Include="CopyMemoryStream.cs" />
     <Compile Include="ScpWebResponse.cs" />
@@ -87,5 +66,7 @@
     <Compile Include="SftpWebRequestCreator.cs" />
     <Compile Include="SftpWebResponse.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <!-- Import the necessary MSBuild targets -->
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
