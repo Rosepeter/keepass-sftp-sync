@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using KeePassLib.Serialization;
-using System.Windows.Forms;
 
 namespace SftpSync
 {
@@ -21,7 +20,6 @@ namespace SftpSync
                 FileTransactionEx.Configure("scp", false);
             } catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error on Register", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
 
